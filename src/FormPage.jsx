@@ -1,3 +1,4 @@
+// src/FormPage.jsx
 import React, { useState } from "react";
 import { useCart } from "./cartContext";
 import "./formPage.css";
@@ -36,9 +37,10 @@ const FormPage = () => {
   const [loading, setLoading] = useState(false);
   const [distance, setDistance] = useState(null);
 
-  const totalPrice = cartItems.reduce((total, item) => {
-    return total + item.price * (item.quantity || 1);
-  }, 0);
+  const totalPrice = cartItems.reduce(
+    (total, item) => total + item.price * (item.quantity || 1),
+    0
+  );
 
   const koforiduaCenter = [6.0941, -0.2606];
 
@@ -48,7 +50,7 @@ const FormPage = () => {
         `https://router.project-osrm.org/route/v1/driving/${fromCoords[1]},${fromCoords[0]};${toCoords[1]},${toCoords[0]}?overview=false`
       );
       const data = await res.json();
-      if (data.routes && data.routes.length > 0) {
+      if (data.routes?.length > 0) {
         return Math.round(data.routes[0].duration / 60);
       }
     } catch (err) {
@@ -101,33 +103,36 @@ const FormPage = () => {
 
     setLoading(true);
     setError("");
+    setSuccess(false);
 
-    const payload = {
-      access_key: "e2158152-919f-402f-8674-9aa76afdc614",
-      subject: "📩 New Order Submission from React App",
-      from_name: `${formData.firstName} ${formData.middleName} ${formData.lastName}`,
-      email: formData.email,
-      message: `
-        Full Name: ${formData.firstName} ${formData.middleName} ${
-        formData.lastName
-      }
-        Location: ${formData.location}
-        Phone: ${formData.phone}
-        Email: ${formData.email}
-        Message: ${formData.message}
-        Total Price: GH₵ ${totalPrice.toFixed(2)}
-        Delivery Personnel: 0549202689
-      `,
-    };
+    const form = new FormData();
+    form.append("access_key", "e2158152-919f-402f-8674-9aa76afdc614");
+    form.append("subject", "📩 New Order Submission from React App");
+    form.append(
+      "from_name",
+      `${formData.firstName} ${formData.middleName} ${formData.lastName}`
+    );
+    form.append("email", formData.email);
+    form.append(
+      "message",
+      `
+Full Name: ${formData.firstName} ${formData.middleName} ${formData.lastName}
+Location: ${formData.location}
+Phone: ${formData.phone}
+Email: ${formData.email}
+Message: ${formData.message}
+Total Price: GH₵ ${totalPrice.toFixed(2)}
+Delivery Personnel: 0549202689
+      `
+    );
 
     try {
       const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: form,
       });
-
       const data = await res.json();
+
       if (data.success) {
         setSuccess(true);
         setFormData({
@@ -166,6 +171,7 @@ const FormPage = () => {
       )}
 
       <form className="order-form" onSubmit={handleSubmit}>
+        {/* Personal Info */}
         <div className="form-section">
           <h3 className="form-section-title">Personal Information</h3>
           <div className="name-fields">
@@ -195,6 +201,7 @@ const FormPage = () => {
           />
         </div>
 
+        {/* Contact Info */}
         <div className="form-section">
           <h3 className="form-section-title">Contact Information</h3>
           <input
@@ -228,6 +235,7 @@ const FormPage = () => {
           </div>
         </div>
 
+        {/* Order Details */}
         <div className="form-section">
           <h3 className="form-section-title">Order Details</h3>
           <div className="static-info">
@@ -251,6 +259,7 @@ const FormPage = () => {
         </button>
       </form>
 
+      {/* Map Preview */}
       {coordinates && (
         <div style={{ marginTop: "2rem" }}>
           <h3 style={{ textAlign: "center" }}>📍 Location Preview</h3>
