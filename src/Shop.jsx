@@ -48,6 +48,44 @@ const ingredients = [
 const Shop = () => {
   const { addToCart } = useCart();
   const [submitted, setSubmitted] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    missing_item: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+
+    const form = new FormData();
+    form.append("access_key", "e2158152-919f-402f-8674-9aa76afdc614");
+    form.append("subject", "Missing Item Request from Shop Page");
+    form.append("from_name", "KofCity Foods Website");
+    form.append("name", formData.name);
+    form.append("email", formData.email);
+    form.append("missing_item", formData.missing_item);
+
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: form,
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSubmitted(true);
+        setFormData({ name: "", email: "", missing_item: "" });
+      } else {
+        alert("❌ Failed to send. Please try again.");
+      }
+    } catch {
+      alert("❌ Submission error. Please try again.");
+    }
+  };
 
   return (
     <div className="shop-container">
@@ -81,34 +119,15 @@ const Shop = () => {
             ✅ Thank you! We received your request.
           </p>
         ) : (
-          <form
-            className="missing-form"
-            action="https://api.web3forms.com/submit"
-            method="POST"
-            onSubmit={() => setSubmitted(true)}
-          >
-            <input
-              type="hidden"
-              name="access_key"
-              value="e2158152-919f-402f-8674-9aa76afdc614"
-            />
-            <input
-              type="hidden"
-              name="subject"
-              value="Missing Item Request from Shop Page"
-            />
-            <input
-              type="hidden"
-              name="from_name"
-              value="KofCity Foods Website"
-            />
-
+          <form className="missing-form" onSubmit={handleFormSubmit}>
             <ul className="form-list">
               <li>
                 <input
                   type="text"
                   name="name"
                   placeholder="Your name"
+                  value={formData.name}
+                  onChange={handleChange}
                   required
                 />
               </li>
@@ -117,6 +136,8 @@ const Shop = () => {
                   type="email"
                   name="email"
                   placeholder="Your email address"
+                  value={formData.email}
+                  onChange={handleChange}
                   required
                 />
               </li>
@@ -125,6 +146,8 @@ const Shop = () => {
                   type="text"
                   name="missing_item"
                   placeholder="Item you want us to add"
+                  value={formData.missing_item}
+                  onChange={handleChange}
                   required
                 />
               </li>
