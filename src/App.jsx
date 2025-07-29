@@ -1,6 +1,5 @@
 // src/App.jsx
 import React from "react";
-import "leaflet/dist/leaflet.css";
 import { Routes, Route } from "react-router-dom";
 
 import Header from "./Header";
@@ -10,7 +9,7 @@ import Home from "./Home";
 import Shop from "./Shop";
 import Cart from "./cart";
 import Location from "./Location";
-import FormPage from "./FormPage"; // Ensure filename casing matches
+import FormPage from "./FormPage"; // Make sure this file is correctly named
 
 const App = () => {
   return (
