@@ -25,7 +25,7 @@ const Header = () => {
             <img src={myJoy} alt="App Logo" className="logo" />
             <div className="logo-text-container">
               <h2 className="logo-text neumorphic-logo animate-logo">
-                <span> AFIA </span>
+                <span> Obenewaa </span>
               </h2>
               <span className="delivery-area">📍 Only in Koforidua</span>
             </div>
