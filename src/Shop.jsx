@@ -63,7 +63,7 @@ const Shop = () => {
     e.preventDefault();
 
     const form = new FormData();
-    form.append("access_key", "e2158152-919f-402f-8674-9aa76afdc614");
+    form.append("access_key", "e2158152-919f-402f-8674-9aa76afdc614"); // ✅ Updated API Key
     form.append("subject", "Missing Item Request from Shop Page");
     form.append("from_name", "KofCity Foods Website");
     form.append("name", formData.name);
