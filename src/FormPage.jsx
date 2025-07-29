@@ -1,5 +1,5 @@
 // src/FormPage.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useCart } from "./cartContext";
 import "./formPage.css";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
@@ -19,7 +19,8 @@ L.Icon.Default.mergeOptions({
 });
 
 const FormPage = () => {
-  const { cartItems } = useCart();
+  const { cartItems, clearCart } = useCart();
+  const [isMounted, setIsMounted] = useState(false);
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -36,6 +37,13 @@ const FormPage = () => {
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [distance, setDistance] = useState(null);
+  const [formErrors, setFormErrors] = useState({});
+  const [touchedFields, setTouchedFields] = useState({});
+
+  useEffect(() => {
+    setIsMounted(true);
+    return () => setIsMounted(false);
+  }, []);
 
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.price * (item.quantity || 1),
@@ -43,6 +51,42 @@ const FormPage = () => {
   );
 
   const koforiduaCenter = [6.0941, -0.2606];
+
+  const validateField = (name, value) => {
+    let error = "";
+    switch (name) {
+      case "firstName":
+      case "lastName":
+        if (!value.trim()) error = "This field is required";
+        else if (value.length < 2) error = "Must be at least 2 characters";
+        break;
+      case "phone":
+        if (!/^[0-9]{10,15}$/.test(value)) error = "Invalid phone number";
+        break;
+      case "email":
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
+          error = "Invalid email address";
+        break;
+      case "location":
+        if (!value.trim()) error = "Delivery location is required";
+        break;
+      default:
+        break;
+    }
+    return error;
+  };
+
+  const validateForm = () => {
+    const errors = {};
+    Object.keys(formData).forEach((key) => {
+      if (key !== "middleName" && key !== "message") {
+        const error = validateField(key, formData[key]);
+        if (error) errors[key] = error;
+      }
+    });
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   const getDrivingDistance = async (fromCoords, toCoords) => {
     try {
@@ -59,9 +103,22 @@ const FormPage = () => {
     return null;
   };
 
+  const handleBlur = (e) => {
+    const { name } = e.target;
+    setTouchedFields((prev) => ({ ...prev, [name]: true }));
+    const error = validateField(name, formData[name]);
+    setFormErrors((prev) => ({ ...prev, [name]: error }));
+  };
+
   const handleChange = async (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Validate field immediately after change if it's been touched
+    if (touchedFields[name]) {
+      const error = validateField(name, value);
+      setFormErrors((prev) => ({ ...prev, [name]: error }));
+    }
 
     if (name === "location" && value.trim().length > 2) {
       try {
@@ -94,6 +151,12 @@ const FormPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      setError("Please fix the errors in the form");
+      return;
+    }
+
     const normalized = formData.location.trim().toLowerCase();
 
     if (!koforiduaAreas.includes(normalized)) {
@@ -146,13 +209,17 @@ Delivery Personnel: 0549202689
         });
         setCoordinates(null);
         setDistance(null);
+        setTouchedFields({});
+        clearCart();
       } else {
         setError("❌ Failed to send. Please try again.");
       }
     } catch {
       setError("❌ Error sending message.");
     } finally {
-      setLoading(false);
+      if (isMounted) {
+        setLoading(false);
+      }
     }
   };
 
@@ -166,7 +233,7 @@ Delivery Personnel: 0549202689
       {error && <p className="form-error">{error}</p>}
       {success && (
         <div className="form-success">
-          ✅ Message successfully sent to Joycelyn's email!
+          ✅ Order successfully submitted! We'll contact you shortly.
         </div>
       )}
 
@@ -175,63 +242,101 @@ Delivery Personnel: 0549202689
         <div className="form-section">
           <h3 className="form-section-title">Personal Information</h3>
           <div className="name-fields">
-            <input
-              type="text"
-              name="firstName"
-              placeholder="First Name"
-              value={formData.firstName}
-              onChange={handleChange}
-              required
-            />
-            <input
-              type="text"
-              name="middleName"
-              placeholder="Middle Name"
-              value={formData.middleName}
-              onChange={handleChange}
-            />
+            <div className="input-group">
+              <input
+                type="text"
+                name="firstName"
+                placeholder="First Name *"
+                value={formData.firstName}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                required
+                className={formErrors.firstName ? "input-error" : ""}
+              />
+              {formErrors.firstName && touchedFields.firstName && (
+                <span className="error-message">{formErrors.firstName}</span>
+              )}
+            </div>
+            <div className="input-group">
+              <input
+                type="text"
+                name="middleName"
+                placeholder="Middle Name"
+                value={formData.middleName}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </div>
           </div>
-          <input
-            type="text"
-            name="lastName"
-            placeholder="Last Name"
-            value={formData.lastName}
-            onChange={handleChange}
-            required
-          />
+          <div className="input-group">
+            <input
+              type="text"
+              name="lastName"
+              placeholder="Last Name *"
+              value={formData.lastName}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              required
+              className={formErrors.lastName ? "input-error" : ""}
+            />
+            {formErrors.lastName && touchedFields.lastName && (
+              <span className="error-message">{formErrors.lastName}</span>
+            )}
+          </div>
         </div>
 
         {/* Contact Info */}
         <div className="form-section">
           <h3 className="form-section-title">Contact Information</h3>
-          <input
-            type="text"
-            name="location"
-            placeholder="Enter your delivery location"
-            value={formData.location}
-            onChange={handleChange}
-            required
-          />
-          {formData.location && coordinates === null && (
-            <p className="form-error">❌ Invalid or unrecognized location</p>
-          )}
           <div className="input-group">
             <input
-              type="tel"
-              name="phone"
-              placeholder="Phone Number"
-              value={formData.phone}
+              type="text"
+              name="location"
+              placeholder="Enter your delivery location *"
+              value={formData.location}
               onChange={handleChange}
+              onBlur={handleBlur}
               required
+              className={formErrors.location ? "input-error" : ""}
             />
-            <input
-              type="email"
-              name="email"
-              placeholder="Email Address"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
+            {formErrors.location && touchedFields.location && (
+              <span className="error-message">{formErrors.location}</span>
+            )}
+            {formData.location && coordinates === null && (
+              <p className="form-warning">Searching for location...</p>
+            )}
+          </div>
+          <div className="input-row">
+            <div className="input-group">
+              <input
+                type="tel"
+                name="phone"
+                placeholder="Phone Number *"
+                value={formData.phone}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                required
+                className={formErrors.phone ? "input-error" : ""}
+              />
+              {formErrors.phone && touchedFields.phone && (
+                <span className="error-message">{formErrors.phone}</span>
+              )}
+            </div>
+            <div className="input-group">
+              <input
+                type="email"
+                name="email"
+                placeholder="Email Address *"
+                value={formData.email}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                required
+                className={formErrors.email ? "input-error" : ""}
+              />
+              {formErrors.email && touchedFields.email && (
+                <span className="error-message">{formErrors.email}</span>
+              )}
+            </div>
           </div>
         </div>
 
@@ -245,34 +350,44 @@ Delivery Personnel: 0549202689
             <p>
               <strong>Delivery Personnel Number:</strong> 0549202689
             </p>
+            {distance && (
+              <p>
+                <strong>Estimated Delivery Time:</strong> {distance} minutes
+              </p>
+            )}
           </div>
-          <textarea
-            name="message"
-            placeholder="Leave a note or message..."
-            value={formData.message}
-            onChange={handleChange}
-          />
+          <div className="input-group">
+            <textarea
+              name="message"
+              placeholder="Special instructions or notes..."
+              value={formData.message}
+              onChange={handleChange}
+              onBlur={handleBlur}
+            />
+          </div>
         </div>
 
         <button type="submit" className="submit-btn" disabled={loading}>
-          {loading ? "⏳ Sending..." : "Submit Order"}
+          {loading ? (
+            <>
+              <span className="loading-spinner"></span>
+              Processing Order...
+            </>
+          ) : (
+            "Submit Order"
+          )}
         </button>
       </form>
 
       {/* Map Preview */}
       {coordinates && (
-        <div style={{ marginTop: "2rem" }}>
-          <h3 style={{ textAlign: "center" }}>📍 Location Preview</h3>
-          {distance && (
-            <p style={{ textAlign: "center", marginBottom: "1rem" }}>
-              🕒 Estimated delivery time from center: {distance} minutes
-            </p>
-          )}
+        <div className="map-preview">
+          <h3 className="map-title">📍 Location Preview</h3>
           <MapContainer
             center={coordinates}
-            zoom={13}
+            zoom={15}
             scrollWheelZoom={false}
-            style={{ height: "300px", borderRadius: "16px", marginTop: "1rem" }}
+            className="delivery-map"
           >
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -280,6 +395,9 @@ Delivery Personnel: 0549202689
             />
             <Marker position={coordinates}>
               <Popup>{formData.location}</Popup>
+            </Marker>
+            <Marker position={koforiduaCenter}>
+              <Popup>Koforidua Center</Popup>
             </Marker>
           </MapContainer>
         </div>

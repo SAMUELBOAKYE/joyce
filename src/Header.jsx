@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useCart } from "./cartContext";
 import DarkModeToggle from "./DarkModeToggle";
-import myJoy from "./assets/JOY.jpg";
+import myJoy from "./assets/kontomire.jpg";
 import "./Header.css";
 
 const Header = () => {
