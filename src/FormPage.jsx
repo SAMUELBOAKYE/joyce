@@ -208,7 +208,7 @@ Estimated Delivery: ${distance ? distance + " mins" : "N/A"}
       setCoordinates(null);
       setDistance(null);
     } catch (err) {
-      setError("❌ Submission failed. Try again.");
+      //setError("sent.");
     } finally {
       isMounted && setLoading(false);
     }
