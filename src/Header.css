@@ -1,3 +1,4 @@
+/* === ROOT & THEME VARIABLES === */
 :root {
   --bg: #ffffff;
   --text: #000000;
@@ -11,7 +12,7 @@
   --subtle: #cccccc;
 }
 
-/* === HEADER BASE === */
+/* === HEADER CONTAINER === */
 .header-container {
   background: var(--bg);
   box-shadow: var(--shadow);
@@ -31,6 +32,8 @@
 .logo-wrapper {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  width: 100%;
   gap: 0.75rem;
 }
 .logo {
@@ -62,34 +65,67 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  width: 100%;
+  align-items: flex-start;
 }
 
-/* --- MOBILE: Hamburger --- */
+/* === NAV LINKS BASE === */
+.nav-links {
+  display: none;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  width: 100%;
+}
+.nav-links.open {
+  display: flex;
+  animation: slideDown 0.3s ease-out;
+}
+.nav-item {
+  text-decoration: none;
+  background: var(--bg);
+  color: var(--text);
+  padding: 0.9rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  text-align: left;
+  width: 100%;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.nav-item:hover {
+  transform: scale(1.02);
+  box-shadow: var(--shadow-hover);
+}
+
+/* === HAMBURGER MENU === */
 .hamburger {
   position: absolute;
   top: 1rem;
   right: 1rem;
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   background: var(--bg);
   border: none;
   border-radius: 8px;
   box-shadow: var(--shadow);
   cursor: pointer;
-  padding: 0.5rem;
+  padding: 0.45rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 4px;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  z-index: 1100;
 }
 .hamburger:hover {
   transform: scale(1.05);
+  box-shadow: var(--shadow-hover);
 }
 .hamburger-line {
-  width: 24px;
-  height: 2px;
+  width: 22px;
+  height: 2.2px;
   background-color: var(--text);
   border-radius: 1px;
   transition: transform 0.3s, opacity 0.3s;
@@ -104,33 +140,7 @@
   transform: translateY(-6px) rotate(-45deg);
 }
 
-/* --- MOBILE: Collapsible Nav --- */
-.nav-links {
-  display: none;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 0.5rem 0;
-}
-.nav-links.open {
-  display: flex;
-}
-.nav-item {
-  text-decoration: none;
-  background: var(--bg);
-  color: var(--text);
-  padding: 0.8rem 1rem;
-  font-size: 1rem;
-  border-radius: 8px;
-  box-shadow: var(--shadow);
-  text-align: center;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-.nav-item:hover {
-  transform: scale(1.02);
-  box-shadow: var(--shadow-hover);
-}
-
-/* --- DESKTOP: Inline Nav & Toggle --- */
+/* === DESKTOP STYLES === */
 .desktop-toggle {
   display: none;
 }
@@ -141,30 +151,43 @@
     align-items: center;
     padding: 0 1rem;
   }
-  .hamburger {
-    display: none;
-  }
   .nav-and-controls {
     flex-direction: row;
     align-items: center;
     gap: 2rem;
+    width: auto;
   }
   .nav-links {
-    display: flex;
+    display: flex !important;
     flex-direction: row;
     gap: 1rem;
     padding: 0;
+    width: auto;
+    animation: none;
   }
   .nav-item {
     padding: 0.6rem 1rem;
     font-size: 0.9rem;
+    width: auto;
+    text-align: center;
+  }
+  .hamburger {
+    display: none;
   }
   .desktop-toggle {
     display: block;
   }
 }
 
-/* === MOBILE FONT RESIZING === */
+/* === MOBILE ADJUSTMENTS === */
+@media (max-width: 767px) {
+  .header-content {
+    padding: 0 1rem;
+    align-items: flex-start;
+  }
+}
+
+/* === SMALL MOBILE FONT SIZE === */
 @media (max-width: 480px) {
   .logo {
     width: 42px;
@@ -176,5 +199,17 @@
   .nav-item {
     font-size: 0.95rem;
     padding: 0.7rem 1rem;
+  }
+}
+
+/* === ANIMATIONS === */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
