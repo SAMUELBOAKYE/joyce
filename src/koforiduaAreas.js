@@ -1,0 +1,15 @@
+export const koforiduaAreas = [
+  "koforidua",
+  "asokore",
+  "oyoko",
+  "effiduase",
+  "betom",
+  "ada",
+  "ssnit flats",
+  "new juaben",
+  "abogri",
+  "zongo",
+  "central hospital",
+  "poly junction",
+  "nkurakan",
+];

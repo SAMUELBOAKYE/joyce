@@ -1,0 +1,32 @@
+/* src/components/dark-toggle.css */
+.toggle {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 0.6rem 1.2rem;
+  border-radius: 999px;
+  font-size: 1.5rem;
+  position: relative;
+  background: linear-gradient(145deg, #ffffff, #e6e6e6);
+  box-shadow: 4px 4px 12px #bebebe, -4px -4px 12px #ffffff;
+  transition: all 0.4s ease-in-out;
+}
+
+.toggle.dark {
+  background: linear-gradient(145deg, #1e1e1e, #2c2c2c);
+  box-shadow: 4px 4px 12px #141414, -4px -4px 12px #2a2a2a;
+  color: #fff;
+}
+
+.toggle.light {
+  color: #000;
+}
+
+.toggle-icon {
+  transition: transform 0.5s ease-in-out;
+  display: inline-block;
+}
+
+.toggle.dark .toggle-icon {
+  transform: rotate(360deg);
+}

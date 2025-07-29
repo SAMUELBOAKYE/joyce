@@ -1,0 +1,173 @@
+/* ========== Container ========== */
+.cart-container {
+  width: 90%;
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: var(--mobile-padding);
+  background: var(--bg);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* ========== Heading ========== */
+.cart-heading {
+  font-size: var(--mobile-heading);
+  font-weight: bold;
+  color: var(--text);
+  margin-bottom: 2rem;
+  text-align: center;
+  animation: fadeInDown 0.8s ease-out;
+}
+
+/* ========== Empty State ========== */
+.empty-cart {
+  text-align: center;
+  font-size: 1.1rem;
+  color: var(--subtle);
+  animation: fadeInUp 1s ease-out;
+}
+
+/* ========== Cart Items List ========== */
+.cart-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 1.5rem;
+}
+
+/* ========== Each Cart Item ========== */
+.cart-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--bg);
+  padding: 1.2rem;
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s ease;
+  text-align: center;
+}
+
+.cart-item:hover {
+  transform: translateY(-5px);
+}
+
+/* ========== Product Image ========== */
+.cart-img {
+  width: 90px;
+  height: 90px;
+  border-radius: 12px;
+  object-fit: cover;
+  margin-bottom: 1rem;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* ========== Item Details ========== */
+.cart-details {
+  flex: 1;
+}
+
+.cart-details h4 {
+  font-size: 1.2rem;
+  margin-bottom: 0.3rem;
+  color: var(--text);
+}
+
+.item-price {
+  color: #27ae60;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.item-qty {
+  font-size: 0.9rem;
+  color: var(--subtle);
+}
+
+/* ========== Cart Summary ========== */
+.cart-summary {
+  margin-top: 2.5rem;
+  text-align: center;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.cart-summary h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--text);
+}
+
+/* ========== Checkout Button ========== */
+.checkout-button {
+  padding: 0.9rem 2rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #e67e22, #e74c3c);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 4px 4px 12px #bebebe, -4px -4px 12px #ffffff;
+  transition: all 0.3s ease;
+}
+
+.checkout-button:hover {
+  background: linear-gradient(135deg, #d35400, #c0392b);
+  transform: scale(1.05);
+}
+
+/* ========== Animations ========== */
+@keyframes fadeInDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========== Responsive Design ========== */
+@media (min-width: 768px) {
+  .cart-container {
+    padding: var(--desktop-padding);
+  }
+
+  .cart-heading {
+    font-size: var(--desktop-heading);
+  }
+
+  .cart-item {
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+  }
+
+  .cart-img {
+    margin-right: 1.5rem;
+    margin-bottom: 0;
+  }
+
+  .cart-summary {
+    text-align: right;
+  }
+
+  .checkout-button {
+    width: auto;
+  }
+}

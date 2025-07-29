@@ -1,0 +1,36 @@
+/* Define padding variables for reuse */
+:root {
+  --mobile-padding: 1rem;
+  --desktop-padding: 2rem;
+}
+
+/* Base app container styles */
+.app-container {
+  background-color: #ffffff;
+  min-height: 100vh;
+  color: #000000;
+  transition: background-color 0.3s, color 0.3s;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Dark mode styles */
+.app-container.dark {
+  background-color: #111827;
+  color: #ffffff;
+}
+
+/* Content wrapper styles */
+.content-container {
+  padding: var(--mobile-padding);
+  max-width: 100%;
+}
+
+/* Responsive styles for medium+ screens */
+@media (min-width: 768px) {
+  .content-container {
+    padding: var(--desktop-padding);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}

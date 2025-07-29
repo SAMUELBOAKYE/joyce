@@ -1,0 +1,79 @@
+/* ========= Root Variables ========= */
+:root {
+  /* Base colors */
+  --bg: #e0e5ec;
+  --text: #333;
+  --subtle: #555;
+
+  /* Shadows */
+  --shadow: 8px 8px 16px #babecc, -8px -8px 16px #ffffff;
+  --shadow-hover: 4px 4px 12px #babecc, -4px -4px 12px #ffffff;
+  --shadow-inset: inset 8px 8px 16px #babecc, inset -8px -8px 16px #ffffff;
+
+  /* Spacing */
+  --mobile-padding: 1rem;
+  --desktop-padding: 2rem;
+
+  /* Font sizes */
+  --mobile-text: 1rem;
+  --desktop-text: 1.1rem;
+  --mobile-heading: 1.5rem;
+  --desktop-heading: 2rem;
+
+  /* Transitions */
+  --transition-speed: 0.3s;
+}
+
+/* ========= Dark Mode Overrides ========= */
+body.dark {
+  --bg: #1f1f1f;
+  --text: #f5f5f5;
+  --subtle: #aaa;
+
+  --shadow: 8px 8px 16px #0f0f0f, -8px -8px 16px #2f2f2f;
+  --shadow-hover: 4px 4px 12px #0f0f0f, -4px -4px 12px #2f2f2f;
+  --shadow-inset: inset 8px 8px 16px #0f0f0f, inset -8px -8px 16px #2f2f2f;
+}
+
+/* ========= Base Styles ========= */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", "Roboto", sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  font-size: var(--mobile-text);
+  transition: background-color var(--transition-speed),
+    color var(--transition-speed);
+}
+
+/* ========= Responsive Typography ========= */
+@media (min-width: 768px) {
+  body {
+    font-size: var(--desktop-text);
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-size: var(--desktop-heading);
+  }
+}
+
+/* ========= Utility Classes ========= */
+.shadow {
+  box-shadow: var(--shadow);
+  transition: box-shadow var(--transition-speed);
+}
+
+.shadow-hover:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.shadow-inset {
+  box-shadow: var(--shadow-inset);
+}
+
+.text-subtle {
+  color: var(--subtle);
+}
