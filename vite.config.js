@@ -1,7 +1,12 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import path from "path";
 
 export default defineConfig({
-  base: "./", // ✅ Ensures correct asset loading on Netlify
   plugins: [react()],
+  resolve: {
+    alias: {
+      leaflet: path.resolve(__dirname, "node_modules/leaflet"),
+    },
+  },
 });

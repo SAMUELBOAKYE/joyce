@@ -8,7 +8,7 @@ import "./App.css";
 
 import Home from "./Home";
 import Shop from "./Shop";
-import Cart from "./Cart";
+import Cart from "./cart";
 import Location from "./Location";
 import FormPage from "./FormPage"; // Ensure filename casing matches
 
